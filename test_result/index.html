@@ -144,8 +144,9 @@
 <div id="app" style="margin:0;padding:0; height: 100%;">
     <el-header style="height: 8%;">
         <div class="headernavbar">
-            <svg class="icon" style="height: 3em;vertical-align: middle;fill: currentColor;overflow: hidden;"
-                 viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2539">
+            <svg class="icon" style="height: 3em;vertical-align: middle;fill: currentColor;overflow: hidden;cursor: pointer;"
+                 viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2539"
+                 @click="goToHomePage">
                 <path d="M467.104627 672.205804L110.431373 840.422902l348.300549 159.422745c24.636235 10.842353 43.670588 16.263529 57.123137 16.263529 13.452549 0 33.209725-5.421176 59.231372-16.263529L913.568627 840.44298l-356.673254-168.217098a105.251137 105.251137 0 0 0-89.790746 0z"
                       fill="#797979" p-id="2540"></path>
                 <path d="M110.431373 791.752784v55.17553c202.912627 91.597804 319.006118 142.898196 348.300549 153.901176 43.951686 16.484392 58.287686 25.660235 129.244862-4.718431 47.304784-20.259137 155.828706-70.194196 325.591843-149.785098v-54.573177c-200.864627 93.043451-309.388549 142.817882-325.591843 149.303216-24.294902 9.758118-101.677176 18.713098-138.782117 0-24.736627-12.448627-137.657725-62.243137-338.763294-149.303216z"
@@ -187,6 +188,10 @@
         <el-container>
             <el-main>
                 <template v-if="currentView === 'taskList'">
+                    <div style="margin-bottom: 10px;">
+                        <span>当前任务数量: {{ tasks.length }}</span>
+                        <el-button @click="manualRefresh" size="mini" style="margin-left: 10px;">手动刷新</el-button>
+                    </div>
                     <el-table :data="tasks" style="width: 100%" height="100%">
                         <el-table-column prop="name" label="任务名称" sortable>
                             <template slot-scope="scope">
@@ -914,20 +919,20 @@
                     row.isEditing = false;
                 }
             },
-            switchView(view) {
+            async switchView(view) {
                 this.currentView = view;
                 
                 // 更新活动菜单项
                 switch(view) {
                     case 'taskList':
                         this.activeMenuIndex = "1";
-                        this.getAllTask();
+                        await this.getAllTask();
                         break;
                     case 'createTask':
                         this.activeMenuIndex = "2";
-                        this.get_system_info();
-                        this.get_pids();
-                        this.getProcessTree();
+                        await this.get_system_info();
+                        await this.get_pids();
+                        await this.getProcessTree();
                         // 重置新任务对象
                         this.newTask = { 
                             name: "任务-" + this.getCurrentTimestamp(),
@@ -938,15 +943,15 @@
                         break;
                     case 'compareTask':
                         this.activeMenuIndex = "3";
-                        this.getAllTask();
+                        await this.getAllTask();
                         break;
                     case 'advancedAnalysis':
                         this.activeMenuIndex = "4";
-                        this.getAllTask();
+                        await this.getAllTask();
                         break;
                     case 'reportManagement':
                         this.activeMenuIndex = "5";
-                        this.getComparisonReports();
+                        await this.getComparisonReports();
                         break;
                 }
             },
@@ -1123,11 +1128,33 @@
                 }
             },
             async getAllTask(){
-                 const res = await axios({method: 'get',//提交方法
-							url: '/get_all_task/'//提交地址
-				 })
-				 console.log(res)
-				 this.tasks = res.data.msg
+                try {
+                    console.log('开始获取任务列表...');
+                    const res = await axios({
+                        method: 'get',
+                        url: '/get_all_task/'
+                    });
+                    console.log('获取任务列表响应:', res);
+                    
+                    if (res.data && res.data.code === 200) {
+                        const taskData = res.data.msg || [];
+                        // 使用Vue.set确保响应式更新
+                        this.$set(this, 'tasks', taskData);
+                        console.log('任务列表更新成功，任务数量:', this.tasks.length);
+                        console.log('任务数据:', this.tasks);
+                        
+                        // 强制更新视图
+                        this.$nextTick(() => {
+                            console.log('视图已更新，当前任务数量:', this.tasks.length);
+                        });
+                    } else {
+                        console.error('获取任务列表失败:', res.data);
+                        this.$set(this, 'tasks', []);
+                    }
+                } catch (error) {
+                    console.error('获取任务列表出错:', error);
+                    this.$set(this, 'tasks', []);
+                }
             },
             async getPidImg(){
                  const res = await axios({method: 'get',//提交方法
@@ -2209,16 +2236,52 @@
                 // 显示成功消息
                 this.$message.success('正在打开报告文件');
             },
+            
+            // 跳转到首页
+            goToHomePage() {
+                window.location.href = '/static/home.html';
+            },
+            
+            // 手动刷新任务列表
+            async manualRefresh() {
+                console.log('手动刷新任务列表...');
+                await this.getAllTask();
+                this.$forceUpdate(); // 强制更新视图
+                this.$message.success('任务列表已刷新');
+            },
         async mounted(){
-                // 立即获取任务列表，不管当前视图是什么
-            await this.getAllTask();
-                await this.get_system_info();
-                await this.get_pids();
-                await this.getProcessTree();
-                
-                // 获取报告列表
-                if (this.currentView === 'reportManagement') {
-                    await this.getComparisonReports();
+                console.log('页面开始初始化...');
+                try {
+                    // 确保DOM已准备就绪
+                    await this.$nextTick();
+                    
+                    // 根据当前视图加载相应的数据
+                    console.log('当前视图:', this.currentView);
+                    if (this.currentView === 'taskList' || this.currentView === 'compareTask' || this.currentView === 'advancedAnalysis') {
+                        console.log('开始加载任务列表数据...');
+                        await this.getAllTask();
+                        console.log('任务列表加载完成，任务数量:', this.tasks.length);
+                    }
+                    
+                    // 加载系统信息和进程数据（创建任务时需要）
+                    console.log('开始加载系统信息...');
+                    await this.get_system_info();
+                    await this.get_pids();
+                    await this.getProcessTree();
+                    console.log('系统信息加载完成');
+                    
+                    // 获取报告列表
+                    if (this.currentView === 'reportManagement') {
+                        await this.getComparisonReports();
+                    }
+                    
+                    console.log('页面初始化完成，当前视图:', this.currentView, '任务数量:', this.tasks.length);
+                    
+                    // 强制更新一次视图
+                    this.$forceUpdate();
+                    
+                } catch (error) {
+                    console.error('页面初始化失败:', error);
                 }
                 
                 // 为better和worse类添加样式
@@ -2232,7 +2295,9 @@
                 
                 // 设置定时器，每5秒刷新一次任务列表，以更新任务状态
                 this.intervalId = setInterval(async () => {
-                    await this.getAllTask();
+                    if (this.currentView === 'taskList' || this.currentView === 'compareTask' || this.currentView === 'advancedAnalysis') {
+                        await this.getAllTask();
+                    }
                 }, 5000);
             },
             // 在组件销毁时清除定时器

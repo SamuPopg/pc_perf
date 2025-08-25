@@ -45,7 +45,7 @@ async def http_filter(request: Request, call_next):
 
 @app.get("/")
 def index():
-    return RedirectResponse(url="/static/index.html")
+    return RedirectResponse(url="/static/home.html")
 
 
 @app.get("/system_info/")
