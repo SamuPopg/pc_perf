@@ -1,7 +1,51 @@
-/test_result/
-/pcperfenv39/
+# =================================
+# PC性能监控平台 - Git忽略规则
+# =================================
 
-task.sqlite
-app/__pycache__/excel_report.cpython-39.pyc
-log.log
-evolution.md
+# 项目特定文件夹 (禁止上传到GitHub)
+.cursor/                    # Cursor IDE配置文件夹
+app/                        # 应用核心代码文件夹
+
+# 测试和结果数据
+/test_result/               # 测试结果目录
+task.sqlite                 # 任务数据库文件
+log.log                     # 日志文件
+
+# Python虚拟环境
+/venv/                      # 虚拟环境目录
+/pcperfenv39/              # 旧版虚拟环境
+/env/                      # 通用虚拟环境名称
+/ENV/                      # 通用虚拟环境名称
+
+# Python缓存文件
+__pycache__/               # Python缓存目录
+*.pyc                      # Python编译文件
+*.pyo                      # Python优化编译文件
+*.pyd                      # Python动态库
+.Python                    # Python配置文件
+*.so                       # 共享对象文件
+
+# 项目文档
+evolution.md               # 项目演进文档
+
+# IDE和编辑器配置
+.vscode/                   # VS Code配置
+.idea/                     # IntelliJ IDEA配置
+*.swp                      # Vim交换文件
+*.swo                      # Vim交换文件
+*~                         # 临时文件
+
+# 操作系统文件
+.DS_Store                  # macOS系统文件
+Thumbs.db                  # Windows缩略图
+desktop.ini                # Windows桌面配置
+
+# 日志和临时文件
+*.log                      # 所有日志文件
+*.tmp                      # 临时文件
+*.temp                     # 临时文件
+
+# 数据库文件
+*.sqlite                   # SQLite数据库文件
+*.sqlite3                  # SQLite数据库文件
+*.db                       # 通用数据库文件
