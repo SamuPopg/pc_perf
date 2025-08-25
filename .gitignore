@@ -15,6 +15,7 @@ log.log                     # 日志文件
 /venv/                      # 虚拟环境目录
 /pcperfenv39/              # 旧版虚拟环境
 /env/                      # 通用虚拟环境名称
+/venv/                      # 通用虚拟环境名称
 /ENV/                      # 通用虚拟环境名称
 
 # Python缓存文件
