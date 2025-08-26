@@ -9,8 +9,6 @@ app/                        # 应用核心代码文件夹
 # 测试和结果数据
 /test_result/               # 测试结果目录
 task.sqlite                 # 任务数据库文件
-log.log                     # 日志文件
-
 # Python虚拟环境 - 强制忽略
 venv
 venv/
@@ -52,3 +50,4 @@ desktop.ini                # Windows桌面配置
 *.sqlite                   # SQLite数据库文件
 *.sqlite3                  # SQLite数据库文件
 *.db                       # 通用数据库文件
+log.log
