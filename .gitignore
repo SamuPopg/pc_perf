@@ -11,11 +11,14 @@ app/                        # 应用核心代码文件夹
 task.sqlite                 # 任务数据库文件
 log.log                     # 日志文件
 
-# Python虚拟环境
-/venv/                      # 虚拟环境目录
+# Python虚拟环境 - 强制忽略
+venv
+venv/
+**/venv
+**/venv/
 /pcperfenv39/              # 旧版虚拟环境
-/env/                      # 通用虚拟环境名称
-/ENV/                      # 通用虚拟环境名称
+env/                       # 通用虚拟环境名称
+ENV/                       # 通用虚拟环境名称
 
 # Python缓存文件
 __pycache__/               # Python缓存目录

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PC进程性能监控平台 - 首页</title>
+    <!-- 引入 Element UI CSS -->
+    <link href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+    <!-- 引入 Vue -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+    <!-- 引入 Element UI -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <style>
+        /* 全局样式 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .headernavbar {
+            background-color: #3b4d6e;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .headernavbar h1 {
+            margin: 0;
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .el-header {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 主要内容区样式 */
+        .home-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo-section {
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            margin: 0 auto 20px;
+        }
+
+        .platform-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .platform-subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .feature-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .home-button {
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            min-width: 160px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .platform-title {
+                font-size: 36px;
+            }
+            
+            .platform-subtitle {
+                font-size: 18px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .home-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* 动画效果 */
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="app" style="margin:0;padding:0; height: 100%;">
+    <!-- 顶部导航栏 -->
+    <el-header style="height: 80px;">
+        <div class="headernavbar">
+            <div style="display: flex; align-items: center;">
+                <svg class="icon" style="height: 3em;vertical-align: middle;fill: currentColor;overflow: hidden;cursor: pointer;"
+                     viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2539"
+                     @click="goToMainPage">
+                    <path d="M467.104627 672.205804L110.431373 840.422902l348.300549 159.422745c24.636235 10.842353 43.670588 16.263529 57.123137 16.263529 13.452549 0 33.209725-5.421176 59.231372-16.263529L913.568627 840.44298l-356.673254-168.217098a105.251137 105.251137 0 0 0-89.790746 0z"
+                          fill="#797979" p-id="2540"></path>
+                    <path d="M110.431373 791.752784v55.17553c202.912627 91.597804 319.006118 142.898196 348.300549 153.901176 43.951686 16.484392 58.287686 25.660235 129.244862-4.718431 47.304784-20.259137 155.828706-70.194196 325.591843-149.785098v-54.573177c-200.864627 93.043451-309.388549 142.817882-325.591843 149.303216-24.294902 9.758118-101.677176 18.713098-138.782117 0-24.736627-12.448627-137.657725-62.243137-338.763294-149.303216z"
+                          fill="#282F9A" p-id="2541"></path>
+                    <path d="M110.431373 722.541176V777.255529c202.912627 91.597804 319.006118 142.898196 348.300549 153.901177 43.951686 16.484392 58.287686 25.660235 129.244862-4.718432 47.304784-20.259137 155.828706-70.194196 325.591843-149.785098v-54.052745c-200.864627 93.043451-309.388549 142.817882-325.591843 149.303216-24.294902 9.758118-101.677176 18.713098-138.782117 0-24.736627-12.448627-137.657725-62.243137-338.763294-149.361882z"
+                          fill="#5C67F7" p-id="2542"></path>
+                    <path d="M110.431373 652.488471v55.17553c202.912627 91.597804 319.006118 142.898196 348.300549 153.901176 43.951686 16.484392 58.287686 25.660235 129.244862-4.718431 47.304784-20.259137 155.828706-70.194196 325.591843-149.785098v-54.573177c-200.864627 93.043451-309.388549 142.817882-325.591843 149.303216-24.294902 9.758118-101.677176 18.713098-138.782117 0-24.736627-12.448627-137.657725-62.243137-338.763294-149.303216z"
+                          fill="#00D4AA" p-id="2543"></path>
+                </svg>
+                <h1 style="margin-left: 15px;">PC进程性能监控平台</h1>
+            </div>
+            <div style="font-size: 14px; color: rgba(255,255,255,0.8);">
+                Version 1.0.0
+            </div>
+        </div>
+    </el-header>
+
+    <!-- 主要内容区 -->
+    <div class="home-container">
+        <!-- Logo和标题区域 -->
+        <div class="logo-section fade-in">
+            <div class="logo-icon">
+                <svg style="width: 60px; height: 60px; fill: #667eea;" viewBox="0 0 1024 1024">
+                    <path d="M467.104627 672.205804L110.431373 840.422902l348.300549 159.422745c24.636235 10.842353 43.670588 16.263529 57.123137 16.263529 13.452549 0 33.209725-5.421176 59.231372-16.263529L913.568627 840.44298l-356.673254-168.217098a105.251137 105.251137 0 0 0-89.790746 0z" fill="#797979"></path>
+                    <path d="M110.431373 791.752784v55.17553c202.912627 91.597804 319.006118 142.898196 348.300549 153.901176 43.951686 16.484392 58.287686 25.660235 129.244862-4.718431 47.304784-20.259137 155.828706-70.194196 325.591843-149.785098v-54.573177c-200.864627 93.043451-309.388549 142.817882-325.591843 149.303216-24.294902 9.758118-101.677176 18.713098-138.782117 0-24.736627-12.448627-137.657725-62.243137-338.763294-149.303216z" fill="#282F9A"></path>
+                    <path d="M110.431373 722.541176V777.255529c202.912627 91.597804 319.006118 142.898196 348.300549 153.901177 43.951686 16.484392 58.287686 25.660235 129.244862-4.718432 47.304784-20.259137 155.828706-70.194196 325.591843-149.785098v-54.052745c-200.864627 93.043451-309.388549 142.817882-325.591843 149.303216-24.294902 9.758118-101.677176 18.713098-138.782117 0-24.736627-12.448627-137.657725-62.243137-338.763294-149.361882z" fill="#5C67F7"></path>
+                    <path d="M110.431373 652.488471v55.17553c202.912627 91.597804 319.006118 142.898196 348.300549 153.901176 43.951686 16.484392 58.287686 25.660235 129.244862-4.718431 47.304784-20.259137 155.828706-70.194196 325.591843-149.785098v-54.573177c-200.864627 93.043451-309.388549 142.817882-325.591843 149.303216-24.294902 9.758118-101.677176 18.713098-138.782117 0-24.736627-12.448627-137.657725-62.243137-338.763294-149.303216z" fill="#00D4AA"></path>
+                </svg>
+            </div>
+            <h1 class="platform-title">PC Perf</h1>
+            <p class="platform-subtitle">专业的PC进程性能监控和分析平台<br>实时监控 • 数据分析 • 性能优化</p>
+        </div>
+
+        <!-- 功能特性卡片 -->
+        <div class="features-grid slide-up">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">实时监控</h3>
+                <p class="feature-description">
+                    实时监控进程的CPU、内存、GPU使用率，支持FPS监控和进程截图，全方位掌握应用性能状态
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">数据可视化</h3>
+                <p class="feature-description">
+                    基于ECharts的丰富图表展示，支持多维度数据对比分析，让性能数据一目了然
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3 class="feature-title">任务管理</h3>
+                <p class="feature-description">
+                    灵活的监控任务管理，支持进程树选择，批量操作，让性能测试更加高效便捷
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">对比分析</h3>
+                <p class="feature-description">
+                    多任务性能对比分析，基准测试支持，帮助识别性能变化趋势和优化机会
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3 class="feature-title">报告生成</h3>
+                <p class="feature-description">
+                    自动生成专业的Excel性能报告，支持数据导出，便于团队协作和结果分享
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🖥️</div>
+                <h3 class="feature-title">跨平台支持</h3>
+                <p class="feature-description">
+                    支持Windows、Mac、Linux多平台，兼容各类应用程序，包括游戏和GUI应用
+                </p>
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="action-buttons slide-up">
+            <el-button type="primary" size="large" class="home-button" @click="goToCreateTask">
+                开始监控任务
+            </el-button>
+            <el-button type="info" size="large" class="home-button" @click="goToComparison">
+                性能对比分析
+            </el-button>
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            // 数据可以在这里定义
+        },
+        methods: {
+            // 跳转到主功能页面
+            goToMainPage() {
+                window.location.href = '/static/index.html';
+            },
+            
+            // 直接跳转到创建任务
+            goToCreateTask() {
+                window.location.href = '/static/index.html#createTask';
+            },
+            
+            // 直接跳转到对比分析
+            goToComparison() {
+                window.location.href = '/static/index.html#compareTask';
+            }
+        },
+        mounted() {
+            // 页面加载完成后的逻辑
+            console.log('PC Perf 首页加载完成');
+        }
+    });
+</script>
+</body>
+</html>
